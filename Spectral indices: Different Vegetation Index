@@ -1,0 +1,40 @@
+#Spectral indices 
+library(terra)
+library(imageRy) 
+
+#list of files 
+im.list()
+
+#import imagine
+m92<-im.import("matogrosso_l5_1992219_lrg.jpg") #imagine taken from NASA web site; Landsat Science. 
+#band 1=nir, band 2=red, band 3= green 
+
+#ploting data
+im.plotRGB(m92, r=1, g=2, b=3) #1992
+m06<-im.import("matogrosso_ast_2006209_lrg.jpg") #2006
+im.plotRGB(m06, r=1, g=2, b=3)
+
+#Comparison 
+par(mfrow=c(1,2))
+im.plotRGB(m92, r=1, g=2, b=3)
+im.plotRGB(m06, r=1, g=2, b=3)
+
+# nir=green
+> par(mfrow=c(1,2))
+> im.plotRGB(m06, r=2, g=1, b=3)
+> im.plotRGB(m92, r=2, g=1, b=3)
+
+#nir=blu 
+par(mfrow=c(1,2))
+im.plotRGB(m92, r=2, g=3, b=1)
+im.plotRGB(m06, r=2, g=3, b=1)
+
+#All the imagines 
+par(mfrow=c(2,3))
+im.plotRGB(m92, r=1, g=2, b=3) #1992, nir=red
+im.plotRGB(m92, r=2, g=1, b=3) #1992, nir=green
+im.plotRGB(m92, r=2, g=3, b=1) #1992, nir=blue
+im.plotRGB(m06, r=1, g=2, b=3) #2006, nir=red
+im.plotRGB(m92, r=2, g=1, b=3) #2006, nir=green
+im.plotRGB(m06, r=2, g=3, b=1) #2006, nir=blue
+
