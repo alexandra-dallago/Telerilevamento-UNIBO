@@ -20,9 +20,9 @@ im.plotRGB(m92, r=1, g=2, b=3)
 im.plotRGB(m06, r=1, g=2, b=3)
 
 # nir=green
-> par(mfrow=c(1,2))
-> im.plotRGB(m06, r=2, g=1, b=3)
-> im.plotRGB(m92, r=2, g=1, b=3)
+par(mfrow=c(1,2))
+im.plotRGB(m06, r=2, g=1, b=3)
+im.plotRGB(m92, r=2, g=1, b=3)
 
 #nir=blu 
 par(mfrow=c(1,2))
