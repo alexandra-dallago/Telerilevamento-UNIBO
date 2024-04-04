@@ -38,3 +38,25 @@ im.plotRGB(m06, r=1, g=2, b=3) #2006, nir=red
 im.plotRGB(m92, r=2, g=1, b=3) #2006, nir=green
 im.plotRGB(m06, r=2, g=3, b=1) #2006, nir=blue
 
+#Calculating the DVI for 1992
+dvi92= m92[[1]] - m92[[2]]
+dvi92
+
+#Plotting dvi 
+cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)
+plot(dvi92, col=cl)
+
+#Calculating the DVI for 2006
+dvi06= m06[[1]] - m06[[2]]
+dvi06
+
+#Plotting dvi 
+plot(dvi06, col=cl)
+
+#Calculating NDVI
+ndvi92<-dvi92/(m92[[1]]+m92[[2]])
+ndvi06<-dvi06/(m06[[1]]+m06[[2]])
+par(mfrow=c(1,2))
+plot(ndvi92, col=cl)
+plot(ndvi06, col=cl)
+
