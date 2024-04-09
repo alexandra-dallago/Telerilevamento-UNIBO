@@ -9,3 +9,45 @@ sole.c<-im.classify(sole,2)
 m92.c<-im.classify(m92,2)
 m06.c<-im.classify(m06,2)
 
+par(mfrow=c(1,2))
+plot(m92.c)
+plot(m06.c)
+#1=human, 2=plants
+
+#Calculating frequencies
+f92<-freq(m92.c)
+f06<-freq(m06.c)
+
+tot06<-ncell(m06)
+tot92<-ncell(m92)
+
+prop92=f92/tot92
+prop06=f06/tot06
+
+perc92= prop92*100
+perc06= prop06*100
+
+#Building dataframe
+class<-c("forest","human")
+y92<-c(83,16)
+y06<-c(45,54)
+tabout <-data.frame(class, y92,y06) 
+
+#ggplot 
+ggplot(tabout, aes(x=class,y=y92, color=class)) + geom_bar(stat="identity", fill="white")
+ggplot(tabout, aes(x=class,y=y06, color=class)) + geom_bar(stat="identity", fill="white")
+
+#Unire gli elementi
+library(patchwork)
+anno92<-ggplot(tabout,aes(x=class,y=y92, color=class))+geom_bar(stat="identity", fill="white")
+anno06<-ggplot(tabout,aes(x=class,y=y06, color=class))+geom_bar(stat="identity", fill="white")
+anno92+anno06
+
+#Correcting axis range 
+anno92<-ggplot(tabout,aes(x=class,y=y92, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,100))
+anno06<-ggplot(tabout,aes(x=class,y=y06, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,100))
+anno92+anno06
+
+
+
+
