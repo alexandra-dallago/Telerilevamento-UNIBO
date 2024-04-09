@@ -1,0 +1,11 @@
+#quantifying land cover variability 
+library(terra)
+library(imageRy)
+library(ggplot2) 
+m92<-im.import("matogrosso_l5_1992219_lrg.jpg")
+m06<-im.import("matogrosso_ast_2006209_lrg.jpg")
+sole<-im.import("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
+sole.c<-im.classify(sole,2)
+m92.c<-im.classify(m92,2)
+m06.c<-im.classify(m06,2)
+
