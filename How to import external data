@@ -1,0 +1,5 @@
+library(terra)
+library(imageRy)
+setwd("C:/Users/alexa/Desktop")
+eclissi<-rast("eclissi.jpeg")
+ 
