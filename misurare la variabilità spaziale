@@ -1,0 +1,24 @@
+library(imageRy) 
+library (terra) 
+sentinel<-im.import("sentinel.png") 
+im.plotRGB(sentinel,r=1,g=2,b=3) #nir=band 1, red=band 2, green=band 37
+
+#Variability
+nir<-sentinel[[1]]
+plot(nir)
+cl<-colorRampPalette(c("red","orange","yellow"))(100) 
+plot(nir, col=cl) 
+sd3<-focal(nir,matrix(1/9,3,3), fun=sd)
+plot(sd3) 
+
+library(viridis) 
+viridissc<-colorRampPalette(viridis(7))(100) 
+plot(sd3, col=viridissc)
+
+# mobility window 7x7
+sd7<-focal(nir,matrix(1/49, 7,7), fun=sd)
+plot(sd7, col=viridissc)
+
+#stack
+sdstack<-c(sd3,sd7)
+plot(sdstack, col=viridissc)
