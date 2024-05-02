@@ -15,6 +15,28 @@ im.plotRGB(sentdo, 4, 3, 2)
 
 pairs(sentdo)
 
+pcimage<-im.pca(sentdo)
+tot<- sum (1427.26137, 538.13332,53.50339)
+1427.26137  * 100/tot ed è la variabilità spiegata dal primo asse. 
+
+viridis <- colorRampPalette(viridis(7))(255)
+plot(pcimage, col=viridis)
+
+magma <- colorRampPalette(magma(7))(255)
+plot(pcimage, col=magma)
+
+
+
+
+
+
+
+
+
+
+
+
+
 # PCA
 
 # 1. Sample
