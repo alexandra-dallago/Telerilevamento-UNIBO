@@ -1,0 +1,42 @@
+library(terra)
+library(imageRy)
+setwd("C:/Users/alexa/Desktop/livello dell'acqua")
+
+#Importazione immagini 
+after <- rast("portoalegre_amo_20240506_lrg_esondato.jpg")
+before <- rast("portoalegre_amo_20240506_lrg_prima.jpg")
+
+#classificazione delle immagini
+after1<-im.classify(image1,3) 
+before2<-im.classify(image2,3) 
+
+f1<-freq(after1)
+f2<-freq(before2)
+tot1<-ncell(after1)
+tot2<-ncell(before2)
+
+prop1=f1/tot1
+prop2=f2/tot2
+
+perc1= prop1*100
+perc2= prop2*100
+
+#ggplot e dataframe
+
+
+
+
+
+#calcolo NDVI
+dvi1=after[[1]] - after[[2]] 
+dvi2=before[[1]] - before[[2]] 
+cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)
+plot(dvi2, col=cl)
+plot(dvi1, col=cl)  
+
+ndvi1<-dvi1/(after[[1]]+after[[2]])
+ndvi2<-dvi2/(before[[1]]+before[[2]])
+
+par(mfrow=c(1,2))
+plot(ndvi2, col=cl)
+plot(ndvi1, col=cl)
