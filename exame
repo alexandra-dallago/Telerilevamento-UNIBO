@@ -3,8 +3,8 @@ library(imageRy)
 setwd("C:/Users/alexa/Desktop/livello dell'acqua")
 
 #Importazione immagini 
-after <- rast("portoalegre_amo_20240506_lrg_esondato.jpg")
-before <- rast("portoalegre_amo_20240506_lrg_prima.jpg")
+after <- rast("dublino2022.jpg")
+before <- rast("dublino1984.jpg")
 
 #classificazione delle immagini
 after1<-im.classify(image1,3) 
@@ -22,6 +22,11 @@ perc1= prop1*100
 perc2= prop2*100
 
 #ggplot e dataframe
+
+
+
+
+
 
 
 
