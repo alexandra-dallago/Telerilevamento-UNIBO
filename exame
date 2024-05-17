@@ -1,5 +1,7 @@
 library(terra)
 library(imageRy)
+library(ggplot2) 
+library(patchwork) 
 setwd("C:/Users/alexa/Desktop/livello dell'acqua")
 
 #Importazione immagini 
@@ -22,15 +24,19 @@ perc1= prop1*100
 perc2= prop2*100
 
 #ggplot e dataframe
+y1<-c(18,42,39)
+y2<-c(24,41,34)
+tabout<-data.frame(class, y1, y2)
+anno04<-ggplot(tabout,aes(x=class,y=y1, color=class))+geom_bar(stat="identity", fill="white")
+anno84<-ggplot(tabout,aes(x=class,y=y2, color=class))+geom_bar(stat="identity", fill="white")
+anno84+anno04
 
-
-
-
-
-
-
-
-
+#times series
+im.plotRGB.auto(before)
+im.plotRGB.auto(after)
+differenza<-before[[1]] - after[[1]]
+cl<- colorRampPalette(c("blue","white", "red")) (100)
+plot(differenza, col=cl)
 
 #calcolo NDVI
 dvi1=after[[1]] - after[[2]] 
