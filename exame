@@ -5,49 +5,54 @@ library(patchwork)
 setwd("C:/Users/alexa/Desktop/livello dell'acqua")
 
 #Importazione immagini 
-after <- rast("dublino2022.jpg")
-before <- rast("dublino1984.jpg")
+suppressWarnings ({
+d1984<-rast("dublino1984.jpg")
+})
+suppressWarnings ({
+d2022<-rast("dublino2022.jpg")
+})
 
 #classificazione delle immagini
-after1<-im.classify(image1,3) 
-before2<-im.classify(image2,3) 
+dublino1984<-im.classify(d1984,3) 
+dublino202<-im.classify(d2022,3) 
 
-f1<-freq(after1)
-f2<-freq(before2)
-tot1<-ncell(after1)
-tot2<-ncell(before2)
+f1984<-freq(d1984)
+f2022<-freq(d2022)
+tot1984<-ncell(d1984)
+tot2022<-ncell(d2022)
 
-prop1=f1/tot1
-prop2=f2/tot2
+prop1984=f1984/tot1984
+prop2022=f2022/tot2022
 
-perc1= prop1*100
-perc2= prop2*100
+perc1984= prop1984*100
+perc2022= prop2022*100
 
 #ggplot e dataframe
-y1<-c(18,42,39)
-y2<-c(24,41,34)
-tabout<-data.frame(class, y1, y2)
-anno04<-ggplot(tabout,aes(x=class,y=y1, color=class))+geom_bar(stat="identity", fill="white")
-anno84<-ggplot(tabout,aes(x=class,y=y2, color=class))+geom_bar(stat="identity", fill="white")
-anno84+anno04
+class<-c("water", "forest", "cities") 
+y1984<-c(18,42,39)
+y2022<-c(24,41,34)
+tabout<-data.frame(class,y1984,y2022)
+anno1984<-ggplot(tabout,aes(x=class,y=y1984, color=class))+geom_bar(stat="identity", fill="white")
+anno2022<-ggplot(tabout,aes(x=class,y=y2022, color=class))+geom_bar(stat="identity", fill="white")
+anno1984+anno2022
 
 #times series
-im.plotRGB.auto(before)
-im.plotRGB.auto(after)
-differenza<-before[[1]] - after[[1]]
+im.plotRGB.auto(d1984)
+im.plotRGB.auto(d2022)
+differenza<-d1984[[1]] - d2022[[1]]
 cl<- colorRampPalette(c("blue","white", "red")) (100)
 plot(differenza, col=cl)
 
 #calcolo NDVI
-dvi1=after[[1]] - after[[2]] 
-dvi2=before[[1]] - before[[2]] 
+dvi2022=d2022[[1]] - d2022[[2]] 
+dvi1984=d1984[[1]] - d1984[[2]] 
 cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)
-plot(dvi2, col=cl)
-plot(dvi1, col=cl)  
+plot(dvi2022, col=cl)
+plot(dvi1984, col=cl)  
 
-ndvi1<-dvi1/(after[[1]]+after[[2]])
-ndvi2<-dvi2/(before[[1]]+before[[2]])
+ndvi2022<-dvi2022/(d2022[[1]]+d2022[[2]])
+ndvi1984<-dvi1984/(d1984[[1]]+d1984[[2]])
 
 par(mfrow=c(1,2))
-plot(ndvi2, col=cl)
-plot(ndvi1, col=cl)
+plot(ndvi2022, col=cl)
+plot(ndvi1984, col=cl)
