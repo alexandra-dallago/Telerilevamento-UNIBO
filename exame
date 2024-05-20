@@ -12,14 +12,19 @@ suppressWarnings ({
 d2022<-rast("dublino2022.jpg")
 })
 
+par(mfrow=c(1,2))
+plot(d1984)
+plot(d2022)
+
 #classificazione delle immagini
 dublino1984<-im.classify(d1984,3) 
-dublino202<-im.classify(d2022,3) 
+dublino2022<-im.classify(d2022,3) 
 
-f1984<-freq(d1984)
-f2022<-freq(d2022)
-tot1984<-ncell(d1984)
-tot2022<-ncell(d2022)
+f1984<-freq(dublino1984) #fare la freq di quella classificata, non di quella importata
+f2022<-freq(dublino2022)
+
+tot1984<-ncell(dublino1984)
+tot2022<-ncell(dublino2022)
 
 prop1984=f1984/tot1984
 prop2022=f2022/tot2022
@@ -29,11 +34,11 @@ perc2022= prop2022*100
 
 #ggplot e dataframe
 class<-c("water", "forest", "cities") 
-y1984<-c(18,42,39)
-y2022<-c(24,41,34)
+y1984<-c(28,37,34)
+y2022<-c(32,24,42)
 tabout<-data.frame(class,y1984,y2022)
-anno1984<-ggplot(tabout,aes(x=class,y=y1984, color=class))+geom_bar(stat="identity", fill="white")
-anno2022<-ggplot(tabout,aes(x=class,y=y2022, color=class))+geom_bar(stat="identity", fill="white")
+anno1984<-ggplot(tabout,aes(x=class,y=y1984, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,45)) 
+anno2022<-ggplot(tabout,aes(x=class,y=y2022, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,45)) 
 anno1984+anno2022
 
 #times series
@@ -43,13 +48,25 @@ differenza<-d1984[[1]] - d2022[[1]]
 cl<- colorRampPalette(c("blue","white", "red")) (100)
 plot(differenza, col=cl)
 
+#Times series forse corretto  
+changes<-c(dublino1984,dublino2022)
+cl<- colorRampPalette(c("blue","white", "red")) (100)
+plot(changes, col=cl)
+differences=changes[[1]]-changes[[2]]
+clgreen <- colorRampPalette(c("red","white","blue")) (100)
+plot(differences, col=clgreen)
+
 #calcolo NDVI
-dvi2022=d2022[[1]] - d2022[[2]] 
+##dvi
+dvi2022=d2022[[1]] - d2022[[2]] # usare le immagini importate, non classificate
 dvi1984=d1984[[1]] - d1984[[2]] 
 cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)
+
+par(mfrow=c(1,2))
 plot(dvi2022, col=cl)
 plot(dvi1984, col=cl)  
 
+##ndvi
 ndvi2022<-dvi2022/(d2022[[1]]+d2022[[2]])
 ndvi1984<-dvi1984/(d1984[[1]]+d1984[[2]])
 
@@ -73,8 +90,8 @@ plot(am84)
 plot(am22)
 
 #non sclego la banda
-pcimage<-im.pca(d2022) #50.402974, 9.422787, 6.073494
-pcimage<-im.pca(d1984) #98.278409, 12.630609, 5.498214
+pcimage<-im.pca(d1984) #50.402974, 9.422787, 6.073494
+pcimage<-im.pca(d2022) #98.278409, 12.630609, 5.498214
 
 tot84<-sum(50.402974,9.422787,6.073494) 
 var84x<-50.402974*100/tot84
