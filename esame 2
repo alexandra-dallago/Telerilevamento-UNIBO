@@ -1,0 +1,103 @@
+library(terra)
+library(imageRy)
+library(ggplot2) 
+library(patchwork) 
+setwd("C:/Users/alexa/Desktop/Immagini esame")
+
+#Importazione immagini 
+suppressWarnings ({
+l2009<-rast("LAKEPOWEL2009.jpg")
+})
+suppressWarnings ({
+l2015<-rast("LAKEPOWEL2015.jpg")
+})
+suppressWarnings ({
+l2021<-rast("LAKEPOWEL2021.jpg")
+})
+
+par(mfrow=c(1,3))
+plot(l2009)
+plot(l2015)
+plot(l2021)
+
+#Classificazione delle immagini
+lake2009<-im.classify(l2009,3) 
+lake2015<-im.classify(l2015,3) 
+lake2021<-im.classify(l2021,3) 
+
+f2009<-freq(l2009)
+f2015<-freq(l2015)
+f2021<-freq(l2021)
+
+tot2009<-ncell(l2009)
+tot2015<-ncell(l2015)
+tot2021<-ncell(l2021)
+
+prop2009=f2009/tot2009
+prop2015=f2015/tot2015
+prop2021=f2021/tot2021
+
+perc2009= prop2009*100
+perc2015= prop2015*100
+perc2021= prop2021*100
+
+#ggplot e dataframe
+class<-c("water", "land") 
+y1984<-c(18,42,39)
+y2022<-c(24,41,34)
+tabout<-data.frame(class,y1984,y2022)
+anno1984<-ggplot(tabout,aes(x=class,y=y1984, color=class))+geom_bar(stat="identity", fill="white")
+anno2022<-ggplot(tabout,aes(x=class,y=y2022, color=class))+geom_bar(stat="identity", fill="white")
+anno1984+anno2022
+
+#times series
+im.plotRGB.auto(d1984)
+im.plotRGB.auto(d2022)
+differenza<-d1984[[1]] - d2022[[1]]
+cl<- colorRampPalette(c("blue","white", "red")) (100)
+plot(differenza, col=cl)
+
+#calcolo NDVI
+dvi2022=d2022[[1]] - d2022[[2]] 
+dvi1984=d1984[[1]] - d1984[[2]] 
+cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)
+plot(dvi2022, col=cl)
+plot(dvi1984, col=cl)  
+
+ndvi2022<-dvi2022/(d2022[[1]]+d2022[[2]])
+ndvi1984<-dvi1984/(d1984[[1]]+d1984[[2]])
+
+par(mfrow=c(1,2))
+plot(ndvi2022, col=cl)
+plot(ndvi1984, col=cl)
+
+#Analisi multivariata 
+##Scelgo io la banda
+im.plotRGB(d1984,r=1,g=2,b=3)
+im.plotRGB(d2022,r=1,g=2,b=3)
+nir84<-d1984[[1]]
+nir22<-d2022[[1]]
+
+cl<-colorRampPalette(c("red","orange","yellow"))(100) 
+plot(nir84, col=cl)
+plot(nir22, col=cl)
+am84<-focal(nir84,matrix(1/9,3,3),fun=sd)
+am22<-focal(nir22,matrix(1/9,3,3),fun=sd)
+plot(am84)
+plot(am22)
+
+#non sclego la banda
+pcimage<-im.pca(d2022) #50.402974, 9.422787, 6.073494
+pcimage<-im.pca(d1984) #98.278409, 12.630609, 5.498214
+
+tot84<-sum(50.402974,9.422787,6.073494) 
+var84x<-50.402974*100/tot84
+var84y<-9.422787*100/tot84
+var84z<-6.073494*100/tot84
+var84x
+var84y
+var84z
+
+tot22<-sum(98.278409, 12.630609, 5.498214)
+var22x<-98.278409*100/tot22
+var22y<-12.630609*100/tot22
