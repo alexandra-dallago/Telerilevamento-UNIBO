@@ -1,58 +1,67 @@
-library(terra)
-library(imageRy)
-library(ggplot2) 
-library(patchwork) 
+#Il seguente codice è stato scritto utilizzando questi pacchetti precedentemente scaricati.
+
+library(terra)       #Pacchetto R specializzata per l'analisi geospaziale e la manipolazione di dati raster.
+library(imageRy)     #Pacchetto R usato per gestire dati raster, la visualizzazione, l'importazione la modifica delle immagini. Inoltre, facilita la condivisione delle immagini.
+library(ggplot2)     #Pacchetto R per la creazione di grafici statistici.
+library(patchwork)   #Pacchetto R usato per organizzare e personalizzare la disposizione di più grafici. 
+
+#"setwd()" è un comando usato per impostare la directory del lavoro. In questo caso è stata impostata nella cartella "imamgini d'esame" nel desktop del computer.
 setwd("C:/Users/alexa/Desktop/Immagini esame")
 
-#Importazione immagini 
+#Importazione immagini dalla cartella indicata nella directory tramite la funzione "rast()" del pacchetto "terra".
 d1984<-rast("dublino1984.jpg")
 d2022<-rast("dublino2022.jpg")
 
-par(mfrow=c(1,2))
-plot(d1984)
+par(mfrow=c(1,2))     #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 2 colonne.
+plot(d1984)           #Le immagini vengono visualizzate tramite la funzione "plot()".
 plot(d2022)
 
-#classificazione delle immagini
-dublino1984<-im.classify(d1984,3) 
+#Classificazione delle immagini attraverso la funzione "im.classify()" e successivo calcolo della relativa frequenza, proporzione e percentuale.
+
+dublino1984<-im.classify(d1984,3)     #Classifica le immagini tramite k-means (un agoritmo di clustering che divide un  insieme di dati in un numero predeterminato di gruppi basati sulla loro somiglianza) specificando il numero di cluster che in questo caso sono 3.
 dublino2022<-im.classify(d2022,3) 
 
-f1984<-freq(dublino1984) #fare la freq di quella classificata, non di quella importata
+f1984<-freq(dublino1984)              #Calcolo la frequenza di ciascun cluster ottenuto dalla classificazione dell'immagine.
 f2022<-freq(dublino2022)
 
-tot1984<-ncell(dublino1984)
+tot1984<-ncell(dublino1984)           #Calcolo il numero totale di celle nell'immagine. 
 tot2022<-ncell(dublino2022)
 
-prop1984=f1984/tot1984
+prop1984=f1984/tot1984                #Calcolo la proporzione rispetto al totale.
 prop2022=f2022/tot2022
 
-perc1984= prop1984*100
+perc1984= prop1984*100                #Calcolo della percentuale dei cluster rispetto al totale delle celle.
 perc2022= prop2022*100
 
-#ggplot e dataframe
-class<-c("water", "forest", "cities") 
-y1984<-c(28,37,34)
+#ggplot e dataframe: creiamo un dataframe contenente le classi, numero di pixel corrispondenti a ciascuna classe per le due immagini. I dati vengono poi usati per creare due grafici a barre per confrontare le distribuzione delle classi nelle immagini.  
+
+class<-c("water", "forest", "cities")       #Vettore a cui vengono attribuite 3 classi.
+y1984<-c(28,37,34)                          #Vettore a cui vengono attribuite le relative percentuali calcolate precedentemente.
 y2022<-c(32,24,42)
-tabout<-data.frame(class,y1984,y2022)
-anno1984<-ggplot(tabout,aes(x=class,y=y1984, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,45)) 
+tabout<-data.frame(class,y1984,y2022)       #Dataframe dove vengono inserite le classi di terreno e le relative percentuali per entrambe le immagini.
+anno1984<-ggplot(tabout,aes(x=class,y=y1984, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,45))       #Creazione di un grafico a barre utilizzando ggplot (dal paccketto ggplot2) per rappresentare la distribuzione delle percentuali nelle 3 classi (water, forest,cities). "geom_bar()" specifica che il tipo di grafico, ovvero quello a barre."color=class" indica che le barre sono colorate in base al vettore "classe". "stat="identity"" indica che i valori forniti nei dati verranno usati per determinare l'altezza delle barre, ma "ylim(c(0,45))" indica che la scala sull'asse y è impostata da 0 a 45. "fill="white"" specifica che il colore di riempimento delle barre sarà bianco. 
 anno2022<-ggplot(tabout,aes(x=class,y=y2022, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,45)) 
-anno1984+anno2022
+anno1984+anno2022                           #Unisce i due grafici a barre creati precedentemente in una sola finestra.
 
-#times series
-im.plotRGB.auto(d1984)
+#Times series
+##Visualizziamo la differenza pixel per pixel tra le due immagini usando una palette di colori per evidenziare le variazioni. Osserviamo le differenze effettive tra le immagini in termini di intensità dei pixel.
+
+im.plotRGB.auto(d1984)                    #Visualizza direttamente i dati usando le bande 1,2,3 nello spazio RGB. La funzione fa èarte del pacchetto imageRy.
 im.plotRGB.auto(d2022)
-differenza<-d1984[[1]] - d2022[[1]]
-cl<- colorRampPalette(c("blue","white", "red")) (100)
-plot(differenza, col=cl)
+differenza<-d1984[[1]] - d2022[[1]]       #Calcola la differenza pixel per pixel tra le due immagini considerando solo il primo elemento selezionato tramite "[[1]]" che in questo caso rappresenta il rosso.
+cl<- colorRampPalette(c("blue","white", "red")) (100)      #Crea una rampa di colori che va dal blu al bianco al rosso con 100 gradazioni.
+plot(differenza, col=cl)                  #Visualizzazione dell'oggetto "differenza" con la rampa di colori "cl precedentemente creati".
 
-#Times series forse corretto  
-changes<-c(dublino1984,dublino2022)
-cl<- colorRampPalette(c("blue","white", "red")) (100)
-plot(changes, col=cl)
-differences=changes[[1]]-changes[[2]]
+#Uniamo le immagini risultate dalla classificazione e calcoliamo la differenza tra i risulltati; è quindi un confronto delle classificazioni delle immagini  e possiamo vedere come le classi scelte (water, forest, cities) sono cambiete tra le due immagini.
+
+changes<-c(dublino1984,dublino2022)                         #Visualizza in un array le due immagini precedentemente classificate. 
+cl<- colorRampPalette(c("blue","white", "red")) (100)       #Crea una rampa di colori che va dal blu al bianco al rosso con 100 gradazioni.
+plot(changes, col=cl)                                       #Visualizzo l'elemento "changes" con la rampa di colori precedentemente creata, ovvero "cl".
+differences=changes[[1]]-changes[[2]]                       #Calcola la differenza pixel per pixel tra i risultati della classificazione delle immagini PERCHEEEEEE [[1]] E [[2]]???????????????????????????????
 clgreen <- colorRampPalette(c("red","white","blue")) (100)
-plot(differences, col=clgreen)
+plot(differences, col=clgreen)                              #Plotta l'oggetto "differences" utilizzando la rampa di colori definita in precedenza.
 
-#calcolo NDVI
+#calcolo NDVI: indice di differenza normalizzata delle vegetazioni utilizzando i valori delle bande rosse e infrarosse delle immagini
 ##dvi
 dvi2022=d2022[[1]] - d2022[[2]] # usare le immagini importate, non classificate
 dvi1984=d1984[[1]] - d1984[[2]] 
@@ -70,9 +79,8 @@ par(mfrow=c(1,2))
 plot(ndvi2022, col=cl)
 plot(ndvi1984, col=cl)
 
-#Analisi multivariata 
-##Scelgo io la banda
-im.plotRGB(d1984,r=1,g=2,b=3)
+#Analisi multivariata: Vengono eseguite analisi multivariate come l'applicazione di una trasformata principale delle componenti (PCA) alle immagini, il calcolo della deviazione standard tramite la funzione focal(), e il calcolo della varianza delle componenti principali ottenute dalla PCA.
+##Scelgo io la banda: in questo caso viene specificata manualmente la banda da utilizzare (r=1,g=2,b=3)
 im.plotRGB(d2022,r=1,g=2,b=3)
 nir84<-d1984[[1]]
 nir22<-d2022[[1]]
@@ -85,7 +93,8 @@ am22<-focal(nir22,matrix(1/9,3,3),fun=sd)
 plot(am84)
 plot(am22)
 
-#non sclego la banda
+#non sclego la banda:  viene eseguita la PCA sull'intera immagine senza specificare una banda specifica.
+im.plotRGB(d1984,r=1,g=2,b=3)
 pcimage<-im.pca(d1984) #50.402974, 9.422787, 6.073494
 pcimage<-im.pca(d2022) #98.278409, 12.630609, 5.498214
 
