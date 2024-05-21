@@ -5,12 +5,8 @@ library(patchwork)
 setwd("C:/Users/alexa/Desktop/Immagini esame")
 
 #Importazione immagini 
-suppressWarnings ({
 d1984<-rast("dublino1984.jpg")
-})
-suppressWarnings ({
 d2022<-rast("dublino2022.jpg")
-})
 
 par(mfrow=c(1,2))
 plot(d1984)
