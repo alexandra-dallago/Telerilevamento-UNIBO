@@ -46,7 +46,7 @@ anno1984+anno2022                           #Unisce i due grafici a barre creati
 #Times series
 ##Visualizziamo la differenza pixel per pixel tra le due immagini usando una palette di colori per evidenziare le variazioni. Osserviamo le differenze effettive tra le immagini in termini di intensità dei pixel.
 
-im.plotRGB.auto(d1984)                    #Visualizza direttamente i dati usando le bande 1,2,3 nello spazio RGB. La funzione fa èarte del pacchetto imageRy.
+im.plotRGB.auto(d1984)                    #Visualizza direttamente i dati usando le bande 1,2,3 nello spazio RGB. La funzione fa parte del pacchetto imageRy.
 im.plotRGB.auto(d2022)
 differenza<-d1984[[1]] - d2022[[1]]       #Calcola la differenza pixel per pixel tra le due immagini considerando solo il primo elemento selezionato tramite "[[1]]" che in questo caso rappresenta il rosso.
 cl<- colorRampPalette(c("blue","white", "red")) (100)      #Crea una rampa di colori che va dal blu al bianco al rosso con 100 gradazioni.
@@ -58,58 +58,64 @@ changes<-c(dublino1984,dublino2022)                         #Visualizza in un ar
 cl<- colorRampPalette(c("blue","white", "red")) (100)       #Crea una rampa di colori che va dal blu al bianco al rosso con 100 gradazioni.
 plot(changes, col=cl)                                       #Visualizzo l'elemento "changes" con la rampa di colori precedentemente creata, ovvero "cl".
 differences=changes[[1]]-changes[[2]]                       #Calcola la differenza pixel per pixel tra i risultati della classificazione delle immagini PERCHEEEEEE [[1]] E [[2]]???????????????????????????????
-clgreen <- colorRampPalette(c("red","white","blue")) (100)
+clgreen <- colorRampPalette(c("red","white","blue")) (100)  #Crea una rampa di colori che va dal rosso al bianco al blu con 100 gradazioni.
 plot(differences, col=clgreen)                              #Plotta l'oggetto "differences" utilizzando la rampa di colori definita in precedenza.
 
-#calcolo NDVI: indice di differenza normalizzata delle vegetazioni utilizzando i valori delle bande rosse e infrarosse delle immagini
-##dvi
-dvi2022=d2022[[1]] - d2022[[2]] # usare le immagini importate, non classificate
-dvi1984=d1984[[1]] - d1984[[2]] 
-cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)
+#Calcolo DVI: Indice di differenza di vegetazione.
 
-par(mfrow=c(1,2))
-plot(dvi2022, col=cl)
+dvi2022=d2022[[1]] - d2022[[2]]     #Differenza tra le bande del vicino infrarosso nir [[1]] e del rosso red [[2]]. 
+dvi1984=d1984[[1]] - d1984[[2]]     
+cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)     #Crea una rampa di colori che va dal blu scuro, al giallo, al rosso e al nero con 100 gradazioni.
+
+par(mfrow=c(1,2))        #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 2 colonne.
+plot(dvi2022, col=cl)    #Le immagini vengono visualizzate tramite la funzione "plot()" e rappresentano l'indice di differenza di vegetazione per l'immagine di Dublino nel 1984 e Dublino nel 2022.
 plot(dvi1984, col=cl)  
 
-##ndvi
-ndvi2022<-dvi2022/(d2022[[1]]+d2022[[2]])
-ndvi1984<-dvi1984/(d1984[[1]]+d1984[[2]])
+##Calcolo NDVI: indice di differenza normalizzata delle vegetazioni utilizzando i valori delle bande rosse e infrarosse delle immagini. viene calcolata con la formula NDVI=(nir-red/nir+red)
 
-par(mfrow=c(1,2))
-plot(ndvi2022, col=cl)
+ndvi2022<-dvi2022/(d2022[[1]]+d2022[[2]])    #dvi2022 è il numeratore nir-red. d2022[[1]]+d2022[[2]] rappresenta il denominatore, ovvero nir+red; dove le bande sono nir=1 e red=2.
+ndvi1984<-dvi1984/(d1984[[1]]+d1984[[2]])    #dvi1984 è il numeratore nir-red. d1984[[1]]+d1984[[2]] rappresenta il denominatore, ovvero nir+red; dove le bande sono nir=1 e red=2.
+
+par(mfrow=c(1,2))           #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 2 colonne.
+plot(ndvi2022, col=cl)      #Le immagini vengono visualizzate tramite la funzione "plot()" e rappresentano l'indice NDVI per l'immagine di Dublino nel 1984 e Dublino nel 2022, con la relativa palette di colori  
 plot(ndvi1984, col=cl)
 
 #Analisi multivariata: Vengono eseguite analisi multivariate come l'applicazione di una trasformata principale delle componenti (PCA) alle immagini, il calcolo della deviazione standard tramite la funzione focal(), e il calcolo della varianza delle componenti principali ottenute dalla PCA.
+
 ##Scelgo io la banda: in questo caso viene specificata manualmente la banda da utilizzare (r=1,g=2,b=3)
-im.plotRGB(d2022,r=1,g=2,b=3)
-nir84<-d1984[[1]]
+
+im.plotRGB(d2022,r=1,g=2,b=3)    #Comando che permette la visualizzazione di tutti i colori combinando le bande rosso, verde e blu. ???????????????????????In questo caso il rosso è nella banda 1, il verde nella banda 2 e il blu nella banda 3. La funzione fa parte del pacchetto imageRy.
+im.plotRGB(d2022,r=1,g=2,b=3) 
+nir84<-d1984[[1]]    #Associamo la banda 1, il nir????? all'oggetto nir84 per comodità. vogliamo usare l'infrarosso perchè la vegetazione assorbe il rosso.
 nir22<-d2022[[1]]
 
-cl<-colorRampPalette(c("red","orange","yellow"))(100) 
+cl<-colorRampPalette(c("red","orange","yellow"))(100)    #Creata una palette di colori che va dal rosso, all'arancione e al giallo con 100 sfumature per visualizzare poi le immagini nir. 
 plot(nir84, col=cl)
 plot(nir22, col=cl)
-am84<-focal(nir84,matrix(1/9,3,3),fun=sd)
+
+am84<-focal(nir84,matrix(1/9,3,3),fun=sd)      #Calcolo della deviazione standard attraverso la funzione "focal()" che consente di creare una finestra di calcolo la cui dimensione/composizoine è definita da "matrix()"; nell ospecifico 1/9 indica che la finestra è grande 9 quadretti disposi 3x3. "fun()" inidica la funzione e "sd" indica la deviazione standard. 
 am22<-focal(nir22,matrix(1/9,3,3),fun=sd)
-plot(am84)
+plot(am84)                                     #Visualizzazione delle deviazioni standard delle due immagini. 
 plot(am22)
 
-#non sclego la banda:  viene eseguita la PCA sull'intera immagine senza specificare una banda specifica.
+#Non sclego la banda:  viene eseguita la PCA sull'intera immagine senza specificare una banda. E' una analisi delle copmonenti principali dell'immagine che ci permette di portare un sistema a più bande in una sola. 
 im.plotRGB(d1984,r=1,g=2,b=3)
-pcimage<-im.pca(d1984) #50.402974, 9.422787, 6.073494
-pcimage<-im.pca(d2022) #98.278409, 12.630609, 5.498214
+im.plotRGB(d2022,r=1,g=2,b=3)
+pcimage<-im.pca(d1984) #La funzione im.pca() ci da i 3 valori delle componenti principali, ovvero: 79.65412, 17.96076, 12.62986
+pcimage<-im.pca(d2022) #I valori delle 3 componenti principali sono: 87.91545, 24.08029, 13.03455
 
-tot84<-sum(50.402974,9.422787,6.073494) 
-var84x<-50.402974*100/tot84
-var84y<-9.422787*100/tot84
-var84z<-6.073494*100/tot84
+tot84<-sum(79.65412, 17.96076, 12.62986) 
+var84x<-79.65412*100/tot84
+var84y<-17.96076*100/tot84
+var84z<-12.62986*100/tot84
 var84x
 var84y
 var84z
 
-tot22<-sum(98.278409, 12.630609, 5.498214)
-var22x<-98.278409*100/tot22
-var22y<-12.630609*100/tot22
-var22z<-5.498214*100/tot22
+tot22<-sum(87.91545, 24.08029, 13.03455)
+var22x<-87.91545*100/tot22
+var22y<-24.08029*100/tot22
+var22z<-13.03455*100/tot22
 var22x
 var22y
 var22z
