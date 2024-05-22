@@ -101,22 +101,27 @@ plot(am22)
 #Non sclego la banda:  viene eseguita la PCA sull'intera immagine senza specificare una banda. E' una analisi delle copmonenti principali dell'immagine che ci permette di portare un sistema a più bande in una sola. 
 im.plotRGB(d1984,r=1,g=2,b=3)
 im.plotRGB(d2022,r=1,g=2,b=3)
-pcimage<-im.pca(d1984) #La funzione im.pca() ci da i 3 valori delle componenti principali, ovvero: 79.65412, 17.96076, 12.62986
-pcimage<-im.pca(d2022) #I valori delle 3 componenti principali sono: 87.91545, 24.08029, 13.03455
+pcimage84<-im.pca(d1984) #La funzione im.pca() ci da i 3 valori delle componenti principali, ovvero: 79.65412, 17.96076, 12.62986
+pcimage22<-im.pca(d2022) #I valori delle 3 componenti principali sono: 87.91545, 24.08029, 13.03455
 
-tot84<-sum(79.65412, 17.96076, 12.62986) 
+tot84<-sum(79.65412, 17.96076, 12.62986)      #Calcolo della varianza spiegata dalle 3 componenti principali per entrambi gli anni.
 var84x<-79.65412*100/tot84
 var84y<-17.96076*100/tot84
 var84z<-12.62986*100/tot84
-var84x
-var84y
-var84z
+
+var84x      #Variabilità spiegata dal primo asse
+var84y      #Variabilità spiegata dal secondo asse
+var84z      #Variabilità spiegata dal terzo asse
 
 tot22<-sum(87.91545, 24.08029, 13.03455)
 var22x<-87.91545*100/tot22
 var22y<-24.08029*100/tot22
 var22z<-13.03455*100/tot22
+
 var22x
 var22y
 var22z
 
+clll<-colorRampPalette(c("red","orange","yellow"))(255) 
+plot(pcimage84, col=clll)
+plot(pcimage22, col=clll)
