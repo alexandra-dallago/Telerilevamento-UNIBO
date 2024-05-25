@@ -45,7 +45,7 @@ b23g<-TC2023[[2]]
 b23b<-TC2023[[3]]
 b23nir<-NIR2023[[1]]
 
-vaia15<-c(b15r,b15g,b15b,b15nir)      #Uniamo in un unico oggetto, ovvero "vaia15", tutte le bande estratte rpecedentemente ottenendo così un unico oggetto avente tutte le 4 bande d'interesse, ovevro rosso, verde, blu e nir; tramite l'assegnazione "c" concatenate essendo elementi di un vettore
+vaia15<-c(b15r,b15g,b15b,b15nir)      #Uniamo in un unico oggetto, ovvero "vaia15", tutte le bande estratte precedentemente ottenendo così un unico oggetto avente tutte le 4 bande d'interesse, ovevro rosso, verde, blu e nir; tramite l'assegnazione "c" concatenate essendo elementi di un vettore
 vaia18<-c(b18r,b18g,b18b,b18nir)
 vaia23<-c(b23r,b23g,b23b,b23nir)
 
@@ -131,19 +131,10 @@ plot(diff1518, col=cl)                  #Visualizzazione dell'oggetto "diff1518"
 plot(diff1823, col=cl) 
 plot(diff1523, col=cl) 
 
-##Uniamo le immagini risultate dalla classificazione e calcoliamo la differenza tra i risulltati; è quindi un confronto delle classificazioni delle immagini e come le classi scelte (water, forest, cities) sono cambiate.
-
-changes<-c(vaia15c,vaia18c,vaia23c)                         #Visualizza in un array le due immagini precedentemente classificate. 
-cl<- colorRampPalette(c("blue","white", "red")) (100)       #Crea una rampa di colori che va dal blu al bianco al rosso con 100 gradazioni.
-plot(changes, col=cl)                                       #Visualizzo l'elemento "changes" con la rampa di colori precedentemente creata, ovvero "cl".
-differences=changes[[1]]-changes[[3]]                       #Calcola la differenza pixel per pixel tra i risultati della classificazione delle immagini PERCHEEEEEE [[1]] E [[2]]???????????????????????????????
-clgreen <- colorRampPalette(c("red","white","blue")) (100)  #Crea una rampa di colori che va dal rosso al bianco al blu con 100 gradazioni.
-plot(differences, col=clgreen)                              #Plotta l'oggetto "differences" utilizzando la rampa di colori definita in precedenza.
-
-##CALCOLO INDICE DI VARIABILITA': DVI E NDVI 
-#Calcolo DVI: Indice di differenza di vegetazione. 
-##Questo indice sfrutta l'alta capacità di riflettanza dell'infrarosso e la scarsa riflettanza del rosso per determinare, tramite una differenza, la biomassa presente in quel pixel. Scegliamo di usare il rosso e non il blu in quanto vogliamo sfruttare la firma spettrale: una sorta di imporonta digitale della luca nelle varie lunghezza d'onda; la vegetazione avrà sempre la stessa firma/andamento. Inoltre sfruttiamo i lrosso in quanto si trova vicino alla banda dell'infrarosso e possiamo anche determianre lo stato di salute della painta in base all'accresccimento del rosso o infrarosso (se aumenta da rosso a nir la pianta è sana).  
-###Il valore DVI varia da +255 a -255 perchè la risoluzione radiometrica è di 8bit, quindi 255 possibilità. 
+#CALCOLO INDICE DI VARIABILITA': DVI E NDVI 
+##Calcolo DVI: Indice di differenza di vegetazione. 
+###Questo indice sfrutta l'alta capacità di riflettanza dell'infrarosso e la scarsa riflettanza del rosso per determinare, tramite una differenza, la biomassa presente in quel pixel. Scegliamo di usare il rosso e non il blu in quanto vogliamo sfruttare la firma spettrale: una sorta di imporonta digitale della luca nelle varie lunghezza d'onda; la vegetazione avrà sempre la stessa firma/andamento. Inoltre sfruttiamo i lrosso in quanto si trova vicino alla banda dell'infrarosso e possiamo anche determianre lo stato di salute della painta in base all'accresccimento del rosso o infrarosso (se aumenta da rosso a nir la pianta è sana).  
+####Il valore DVI varia da +255 a -255 perchè la risoluzione radiometrica è di 8bit, quindi 255 possibilità. 
 
 dvi2015=vaia15[[4]] - vaia15[[1]]     #Differenza tra le bande del vicino infrarosso nir [[4]] e del rosso red [[1]]. 
 dvi2018=vaia18[[4]] - vaia18[[1]]    
@@ -151,7 +142,7 @@ dvi2023=vaia23[[4]] - vaia23[[1]]
 cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)     #Crea una rampa di colori che va dal blu scuro, al giallo, al rosso e al nero con 100 gradazioni.
 
 par(mfrow=c(1,3))        #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 2 colonne.
-plot(dvi2015,col=cl)    #Le immagini vengono visualizzate tramite la funzione "plot()" e rappresentano l'indice di differenza di vegetazione per l'immagine di Dublino nel 1984 e Dublino nel 2022.
+plot(dvi2015,col=cl)     #Le immagini vengono visualizzate tramite la funzione "plot()" e rappresentano l'indice di differenza di vegetazione per l'immagine del 2015 in questo caso.
 plot(dvi2018,col=cl)  
 plot(dvi2023,col=cl)  
 
@@ -176,8 +167,8 @@ pcimage15<-im.pca(vaia15)    #La funzione im.pca() ci da i 3 valori delle compon
 pcimage18<-im.pca(vaia18)    #I valori delle 3 componenti principali sono: 87.91545, 24.08029, 13.03455
 pcimage23<-im.pca(vaia23) 
 
-tot15<-sum(136.453262, 32.793144, 7.449183, 2.016412)      #Calcolo della varianza spiegata dalle 3 componenti principali per entrambi gli anni.
-var15x<-136.453262*100/tot15
+tot15<-sum(136.453262, 32.793144, 7.449183, 2.016412)      #Somamtoria delle componenti principali  
+var15x<-136.453262*100/tot15      #Calcolo della varianza spiegata dalle 3 componenti principali per entrambi gli anni.
 var15y<-32.793144*100/tot15
 var15z<-7.449183*100/tot15
 var15k<-2.016412*100/tot15
@@ -185,7 +176,7 @@ var15k<-2.016412*100/tot15
 var15x      #Variabilità spiegata dal primo asse
 var15y      #Variabilità spiegata dal secondo asse
 var15z      #Variabilità spiegata dal terzo asse
-var15k
+var15k      #Variabilità spiegata dal quarto asse
 
 tot18<-sum(110.148775, 22.794595, 4.353711, 1.424322)
 var18x<-110.148775*100/tot18
@@ -209,7 +200,27 @@ var23y
 var23z
 var23k
 
-clll<-colorRampPalette(c("red","orange","yellow"))(255) 
-plot(pcimage15, col=clll)
-plot(pcimage18, col=clll)
-plot(pcimage23, col=clll)
+inferno <- colorRampPalette(viridis::inferno(100))(100)      #Creata una palette di colori chiamata "inferno" generando 100 colori diversi dalla palette prefatta "inferno" dal pacchetto "viridis". La funzione colorRampPalette è una funzione che premette la formazione di un gradiente di colore che in questo caso è di ovvero 100 
+par(mfrow=c(1,3))    
+plot(pcimage15, col=inferno)
+plot(pcimage18, col=inferno)
+plot(pcimage23, col=inferno)
+ 
+###Scelgo io la banda: in questo caso viene specificata manualmente la banda da utilizzare, ovvero il nir. 
+nir15<-vaia15[[4]]                #Associamo la banda 4, il nir all'oggetto nir15 per comodità. Vogliamo usare l'infrarosso perchè la vegetazione assorbe il rosso.
+nir18<-vaia18[[4]]
+nir23<-vaia23[[4]]
+
+cividis <- colorRampPalette(viridis::cividis(100))(100)      #Creata una palette di colori chiamata "cividis" generando 100 colori diversi dalla palette "cividis" che è una palette prefatta dal pacchetto "viridis". La funzione colorRampPalette è una funzione che premette la formazione di un gradiente di colore che in questo caso è di ovvero 100 
+plot(nir15, col=cividis)      #visualizzazione tramite la funzione "plot()" dell'oggetto "nir15"
+plot(nir18, col=cividis)
+plot(nir23, col=cividis)
+
+am15<-focal(nir15,matrix(1/9,3,3),fun=sd)      #Calcolo della deviazione standard attraverso la funzione "focal()" che consente di creare una finestra di calcolo la cui dimensione/composizoine è definita da "matrix()"; nell ospecifico 1/9 indica che la finestra è grande 9 quadretti disposi 3x3. "fun()" inidica la funzione e "sd" indica la deviazione standard. 
+am23<-focal(nir23,matrix(1/9,3,3),fun=sd)
+am18<-focal(nir18,matrix(1/9,3,3),fun=sd)
+plot(am15)                                     #Visualizzazione delle deviazioni standard delle due immagini. 
+plot(am18)
+plot(am23)
+
+
