@@ -1,5 +1,5 @@
 #Il seguente codice è stato scritto utilizzando questi pacchetti precedentemente scaricati.
-
+##Dopo aver installato i seguenti pacchetti con la funzione "install.packages("")" (NB: per installare il pacchetto bisogna inserirlo tra le virgolette), è necessario richiamare la funzione tramite il codice "library()" (richiamando la funzione non è necessario scrivere il pacchetto con le virgolette perchè è già presente in R una volta installato)
 library(terra)       #Pacchetto R specializzata per l'analisi geospaziale e la manipolazione di dati raster.
 library(imageRy)     #Pacchetto R usato per gestire dati raster, la visualizzazione, l'importazione la modifica delle immagini. Inoltre, facilita la condivisione delle immagini.
 library(ggplot2)     #Pacchetto R per la creazione di grafici statistici.
@@ -10,28 +10,32 @@ library(viridis)     #Pacchetto R usato per dare delle palette di colore disting
 setwd("C:/Users/alexa/Desktop/Immagini esame")
 
 #IMPORTAZIONE DELLE IMMAGINI
-#Importiamo le immagini dalla cartella indicata nella directory tramite la funzione "rast()" del pacchetto "terra".
+##Le immagini sono state prese dal sito "Copernicus Browser" sulla zona di Sappada e Forni Avoltri (UD), Friuli Venezia Giulia per 3 anni diversi (2015-2018-2023) nei mesi di ottobre, per confrontare i danni causati dalla tempesta Vaia del 2018 e la copertura nevosa.
+####Per cisacun anno sono state scaricate due immagini dal satellite "sentinel 2", rispettivamente immagini "true color" aventi le bande b4, b3 e b2 (red, green, blue); e una seconda immagine "false color" aventi le bande b8, b4 e b3 (nir, red, green). Lo scopo è quello di prelevare la banda b8, ovvero quela del nir, per importarla in un unico oggetto assieme alle altre bande b4, b3 e b2
+####Importiamo le immagini dalla cartella indicata nella directory tramite la funzione "rast()" del pacchetto "terra".
 
-TC2015<-rast("tc2015vaia.jpg")
-NIR2015<-rast("fc2015vaia.jpg")
+TC2015<-rast("tc2015vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2015" per l'anno 2015. Le bande presenti in quessto oggetto sono b4, b3 e b2.  
+NIR2015<-rast("fc2015vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2015" per l'anno 2015. Le bande presenti in quessto oggetto sono b8, b4 e b3.  
 
-TC2018<-rast("tc2018vaia.jpg")
-NIR2018<-rast("fc2018vaia.jpg")
+TC2018<-rast("tc2018vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2018" per l'anno 2018. Le bande presenti in quessto oggetto sono b4, b3 e b2.  
+NIR2018<-rast("fc2018vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2018" per l'anno 2015. Le bande presenti in quessto oggetto sono b8, b4 e b3.
 
-TC2023<-rast("tc2023vaia.jpg")
-NIR2023<-rast("fc2023vaia.jpg")
+TC2023<-rast("tc2023vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2023" per l'anno 2023. Le bande presenti in quessto oggetto sono b4, b3 e b2.
+NIR2023<-rast("fc2023vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2023" per l'anno 2023. Le bande presenti in quessto oggetto sono b8, b4 e b3.
+
+#Warning unknown extend: per la mancata georeferenziazione delle immagini 
 
 par(mfrow=c(1,3))     #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 3 colonne.
-plot(TC2015)           #Le immagini vengono visualizzate tramite la funzione "plot()".
+plot(TC2015)          #Le immagini vengono visualizzate tramite la funzione "plot()".
 plot(TC2018)
 plot(TC2023)
 
-b15r<-TC2015[[1]]
-b15g<-TC2015[[2]]
-b15b<-TC2015[[3]]
-b15nir<-NIR2015[[1]]
+b15r<-TC2015[[1]]      #Tramite le parentesi quadre si specifica l'oggetto da estrarre (in questo caso l'oggetto 1, ovvero la banda del rosso, di "TC2015") per assegnarlo ad un nuovo oggetto chiamato "b15r".
+b15g<-TC2015[[2]]      #Tramite le parentesi quadre si specifica l'oggetto da estrarre (in questo caso l'oggetto 2, ovvero la banda del verde, di "TC2015") per assegnarlo ad un nuovo oggetto chiamato "b15v".
+b15b<-TC2015[[3]]      #Tramite le parentesi quadre si specifica l'oggetto da estrarre (in questo caso l'oggetto 3, ovvero la banda del blu, di "TC2015") per assegnarlo ad un nuovo oggetto chiamato "b15b".
+b15nir<-NIR2015[[1]]   #Tramite le parentesi quadre si specifica l'oggetto da estrarre (in questo caso l'oggetto 1, ovvero la banda del nir, di "NIR2015") per assegnarlo ad un nuovo oggetto chiamato "b15nir".
 
-b18r<-TC2018[[1]]
+b18r<-TC2018[[1]]    #Viene fatto lo stesso procendimento sopra descritto per tutti gli anni.
 b18g<-TC2018[[2]]
 b18b<-TC2018[[3]]
 b18nir<-NIR2018[[1]]
@@ -41,29 +45,40 @@ b23g<-TC2023[[2]]
 b23b<-TC2023[[3]]
 b23nir<-NIR2023[[1]]
 
-vaia15<-c(b15r,b15g,b15b,b15nir)
+vaia15<-c(b15r,b15g,b15b,b15nir)      #Uniamo in un unico oggetto, ovvero "vaia15", tutte le bande estratte rpecedentemente ottenendo così un unico oggetto avente tutte le 4 bande d'interesse, ovevro rosso, verde, blu e nir; tramite l'assegnazione "c" concatenate essendo elementi di un vettore
 vaia18<-c(b18r,b18g,b18b,b18nir)
 vaia23<-c(b23r,b23g,b23b,b23nir)
 
+#Attraverso la funzione "im.plotRGB()" del pacchetto "imageRy", applichiamo il nir (b8) alle componenti rosso, verde e blu dell'immagine per vedere come queste cambiano
+
+##Nir sul red: questo comporta una visualizzazione che evidenzia le caratteristiche della vegetazione in quanto la vegetazione rifletto molto di più nel nir rispetto alle altre superifici, facilitandone l'identificazione. E' possibile anche capirne lo stato di salute in quanto più queste sono in salute, più il nir verrà riflesso e più l'immagine sarà luminosa. di cosneguenza, la vegetazione assumerà il colore rosso. 
 par(mfrow=c(1,3))
-im.plotRGB(vaia15, 4,2,3) ## infrarosso sul rosso
-im.plotRGB(vaia18, 4,2,3) ## infrarosso sul rosso
-im.plotRGB(vaia23, 4,2,3) ## infrarosso sul rosso
+im.plotRGB(vaia15, 4,2,3)      #4,2,3 specificano rispettivamente nir, green, blu dell'oggetto "vaia15"
+im.plotRGB(vaia18, 4,2,3)  
+im.plotRGB(vaia23, 4,2,3) 
 
+##Nir sul blu: accade l'opposto di ciò che succede quando il nir è sul rosso; pertanto, la vegetazione apparirà molto scura. inltre, il suolo diventerà giallo fornendo un ottimo contrasto tra vegetazione e suolo. 
 par(mfrow=c(1,3))
-im.plotRGB(vaia15, 1,2,4) ## infrarosso sul blu
-im.plotRGB(vaia18, 1,2,4) ## infrarosso sul blu
-im.plotRGB(vaia23, 1,2,4) ## infrarosso sul blu
+im.plotRGB(vaia15, 1,2,4)      #1,2,4 specificano rispettivamente red, green, nir
+im.plotRGB(vaia18, 1,2,4) 
+im.plotRGB(vaia23, 1,2,4) 
 
+##Nir sul green: la vegetazione apparirà verde, dando un aspetto più naturale. 
 par(mfrow=c(1,3))
-im.plotRGB(vaia15, 1,4,3) ## infrarosso sul verde
-im.plotRGB(vaia18, 1,4,3) ## infrarosso sul verde
-im.plotRGB(vaia23, 1,4,3) ## infrarosso sul verde
+im.plotRGB(vaia15, 1,4,3)      #1,4,3 specificano rispettivamente red, nir, blu
+im.plotRGB(vaia18, 1,4,3) 
+im.plotRGB(vaia23, 1,4,3) 
 
-#CLASSIFICAZIONE DELLE IMMAGINI 
-##Viene fatta la classificazione delle immagini attraverso la funzione "im.classify()" e successivo calcolo della relativa frequenza, proporzione e percentuale.
+#CORRELAZIONE TRA LE IMMAGINI
+##Tramite la funzione "pairs()" viene creata una matrice di grafici a dispersione mostrando le relazioni bivariate tra ogni coppia di banda presente nell'oggetto. Ogni cella della matrice contiene un grafico a dispersione visualizzando la correlazione tra le bande. 
+pairs(vaia15)
+pairs(vaia18)
+pairs(vaia23)
 
-vaia15c<-im.classify(vaia15,3)     #Classifica le immagini tramite k-means (un agoritmo di clustering che divide un  insieme di dati in un numero predeterminato di gruppi basati sulla loro somiglianza) specificando il numero di cluster che in questo caso sono 3.
+#CLASSIFICAZIONE DELLE IMMAGINI E CALCOLO DELLA FREQUENZA
+##Viene fatta la classificazione delle immagini attraverso la funzione "im.classify()" e successivo calcolo della relativa frequenza, proporzione e percentuale del numero dei pixel.
+
+vaia15c<-im.classify(vaia15,3)     #Classifica le immagini tramite k-means (un agoritmo di clustering che divide un insieme di dati in un numero predeterminato di gruppi basati sulla loro somiglianza) specificando il numero di cluster che in questo caso sono 3.
 vaia18c<-im.classify(vaia18,3) 
 vaia23c<-im.classify(vaia23,3) 
 
