@@ -1,0 +1,187 @@
+#Il seguente codice è stato scritto utilizzando questi pacchetti precedentemente scaricati.
+
+library(terra)       #Pacchetto R specializzata per l'analisi geospaziale e la manipolazione di dati raster.
+library(imageRy)     #Pacchetto R usato per gestire dati raster, la visualizzazione, l'importazione la modifica delle immagini. Inoltre, facilita la condivisione delle immagini.
+library(ggplot2)     #Pacchetto R per la creazione di grafici statistici.
+library(patchwork)   #Pacchetto R usato per organizzare e personalizzare la disposizione di più grafici. 
+library(viridis)     #Pacchetto R usato per dare delle palette di colore distinguibili anche dalle persone affette da daltonismo. 
+
+#"setwd()" è un comando usato per impostare la directory del lavoro. In questo caso è stata impostata nella cartella "immagini d'esame" nel desktop del computer.
+setwd("C:/Users/alexa/Desktop/Immagini esame")
+
+#IMPORTAZIONE DELLE IMMAGINI
+#Importiamo le immagini dalla cartella indicata nella directory tramite la funzione "rast()" del pacchetto "terra".
+
+TC2015<-rast("2015-10-22_Vaia.jpg")
+NIR2015<-rast("2015-10-22_Vaia_Fasle_color.jpg")
+
+TC2018<-rast("2018-10-31_Vaia.jpg")
+NIR2018<-rast("2018-10-31_Vaia_False_color.jpg")
+
+TC2023<-rast("2023-11-14_Vaia.jpg")
+NIR2023<-rast("2023-11-14_Vaia_False_color.jpg")
+
+par(mfrow=c(1,3))     #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 3 colonne.
+plot(TC2015)           #Le immagini vengono visualizzate tramite la funzione "plot()".
+plot(TC2018)
+plot(TC2023)
+
+b15r<-TC2015[[1]]
+b15g<-TC2015[[2]]
+b15b<-TC2015[[3]]
+b15nir<-NIR2015[[1]]
+
+b18r<-TC2018[[1]]
+b18g<-TC2018[[2]]
+b18b<-TC2018[[3]]
+b18nir<-NIR2018[[1]]
+
+b23r<-TC2023[[1]]
+b23g<-TC2023[[2]]
+b23b<-TC2023[[3]]
+b23nir<-NIR2023[[1]]
+
+vaia15<-c(b15r,b15g,b15b,b15nir)
+vaia18<-c(b18r,b18g,b18b,b18nir)
+vaia23<-c(b23r,b23g,b23b,b23nir)
+
+par(mfrow=c(1,3))
+im.plotRGB(vaia15, 4,2,3) ## infrarosso sul rosso
+im.plotRGB(vaia18, 4,2,3) ## infrarosso sul rosso
+im.plotRGB(vaia23, 4,2,3) ## infrarosso sul rosso
+
+par(mfrow=c(1,3))
+im.plotRGB(vaia15, 1,2,4) ## infrarosso sul blu
+im.plotRGB(vaia18, 1,2,4) ## infrarosso sul blu
+im.plotRGB(vaia23, 1,2,4) ## infrarosso sul blu
+
+par(mfrow=c(1,3))
+im.plotRGB(vaia15, 1,4,3) ## infrarosso sul verde
+im.plotRGB(vaia18, 1,4,3) ## infrarosso sul verde
+im.plotRGB(vaia23, 1,4,3) ## infrarosso sul verde
+
+#CLASSIFICAZIONE DELLE IMMAGINI 
+##Viene fatta la classificazione delle immagini attraverso la funzione "im.classify()" e successivo calcolo della relativa frequenza, proporzione e percentuale.
+
+vaia15c<-im.classify(vaia15,3)     #Classifica le immagini tramite k-means (un agoritmo di clustering che divide un  insieme di dati in un numero predeterminato di gruppi basati sulla loro somiglianza) specificando il numero di cluster che in questo caso sono 3.
+vaia18c<-im.classify(vaia18,3) 
+vaia23c<-im.classify(vaia23,3) 
+
+f2015<-freq(vaia15c)              #Per calcolare il numero di pixel presenti tra le diverse classificazioni da noi scelte, calcolo la frequenza e la percentuale delle classi.
+f2018<-freq(vaia18c)
+f2023<-freq(vaia23c)
+
+tot2015<-ncell(vaia15c)           #Calcolo il numero totale di celle nell'immagine. 
+tot2018<-ncell(vaia18c)
+tot2023<-ncell(vaia23c)
+
+prop2015=f2015/tot2015               #Calcolo la proporzione rispetto al totale.
+prop2018=f2018/tot2018
+prop2023=f2023/tot2023
+
+perc2015= prop2015*100                #Calcolo della percentuale dei cluster rispetto al totale delle celle.
+perc2018= prop2018*100  
+perc2023= prop2023*100                
+
+#GGPLOT E DATAFRAME 
+##Creiamo un dataframe contenente le classi, numero di pixel corrispondenti a ciascuna classe per le due immagini. I dati vengono poi usati per creare due grafici a barre per confrontare le distribuzione delle classi nelle immagini.  
+
+class<-c("snow", "forest", "soil")       #Vettore a cui vengono attribuite 3 classi.
+y2015<-c(17,48,33)                          #Vettore a cui vengono attribuite le relative percentuali calcolate precedentemente.
+y2018<-c(27,34,37)
+y2023<-c(15,35,48)
+
+
+tabout<-data.frame(class,2015,y2018,y2023)       #Dataframe dove vengono inserite le classi di terreno e le relative percentuali per entrambe le immagini.
+anno2015<-ggplot(tabout,aes(x=class,y=y2015, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,50))       #Creazione di un grafico a barre utilizzando ggplot (dal paccketto ggplot2) per rappresentare la distribuzione delle percentuali nelle 3 classi (water, forest,cities). "geom_bar()" specifica che il tipo di grafico, ovvero quello a barre."color=class" indica che le barre sono colorate in base al vettore "classe". "stat="identity"" indica che i valori forniti nei dati verranno usati per determinare l'altezza delle barre, ma "ylim(c(0,45))" indica che la scala sull'asse y è impostata da 0 a 45. "fill="white"" specifica che il colore di riempimento delle barre sarà bianco. 
+anno2018<-ggplot(tabout,aes(x=class,y=y2018, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,50)) 
+anno2023<-ggplot(tabout,aes(x=class,y=y2023, color=class))+geom_bar(stat="identity", fill="white")+ylim(c(0,50))       #Creazione di un grafico a barre utilizzando ggplot (dal paccketto ggplot2) per rappresentare la distribuzione delle percentuali nelle 3 classi (water, forest,cities). "geom_bar()" specifica che il tipo di grafico, ovvero quello a barre."color=class" indica che le barre sono colorate in base al vettore "classe". "stat="identity"" indica che i valori forniti nei dati verranno usati per determinare l'altezza delle barre, ma "ylim(c(0,45))" indica che la scala sull'asse y è impostata da 0 a 45. "fill="white"" specifica che il colore di riempimento delle barre sarà bianco. 
+
+anno2015+anno2018+anno2023                           #Unisce i due grafici a barre creati precedentemente in una sola finestra.
+
+#TIMES SERIES 
+##Visualizziamo la differenza pixel per pixel tra le due immagini usando una palette di colori per evidenziare le variazioni tra le due immagini. Osserviamo le differenze effettive tra le immagini in termini di intensità dei pixel.
+
+im.plotRGB.auto(d1984)                    #Visualizza direttamente i dati usando le bande 1,2,3 nello spazio RGB. La funzione fa parte del pacchetto imageRy.
+im.plotRGB.auto(d2022)
+differenza<-d1984[[1]] - d2022[[1]]       #Calcola la differenza pixel per pixel tra le due immagini considerando solo il primo elemento selezionato tramite "[[1]]" che in questo caso rappresenta il rosso?????????????????????????????????????????
+cl<- colorRampPalette(c("blue","white", "red")) (100)      #Crea una rampa di colori che va dal blu al bianco al rosso con 100 gradazioni.
+plot(differenza, col=cl)                  #Visualizzazione dell'oggetto "differenza" con la rampa di colori "cl precedentemente creati". Osserviamo quindi la differenza tra Dublino del 1984 e Dublino 2022. Il rosso indica un forte cambiamento?????????????????????
+
+##Uniamo le immagini risultate dalla classificazione e calcoliamo la differenza tra i risulltati; è quindi un confronto delle classificazioni delle immagini e come le classi scelte (water, forest, cities) sono cambiate.
+
+changes<-c(dublino1984,dublino2022)                         #Visualizza in un array le due immagini precedentemente classificate. 
+cl<- colorRampPalette(c("blue","white", "red")) (100)       #Crea una rampa di colori che va dal blu al bianco al rosso con 100 gradazioni.
+plot(changes, col=cl)                                       #Visualizzo l'elemento "changes" con la rampa di colori precedentemente creata, ovvero "cl".
+differences=changes[[1]]-changes[[2]]                       #Calcola la differenza pixel per pixel tra i risultati della classificazione delle immagini PERCHEEEEEE [[1]] E [[2]]???????????????????????????????
+clgreen <- colorRampPalette(c("red","white","blue")) (100)  #Crea una rampa di colori che va dal rosso al bianco al blu con 100 gradazioni.
+plot(differences, col=clgreen)                              #Plotta l'oggetto "differences" utilizzando la rampa di colori definita in precedenza.
+
+##CALCOLO INDICE DI VARIABILITA': DVI E NDVI 
+#Calcolo DVI: Indice di differenza di vegetazione. 
+##Questo indice sfrutta l'alta capacità di riflettanza dell'infrarosso e la scarsa riflettanza del rosso per determinare, tramite una differenza, la biomassa presente in quel pixel. Scegliamo di usare il rosso e non il blu in quanto vogliamo sfruttare la firma spettrale: una sorta di imporonta digitale della luca nelle varie lunghezza d'onda; la vegetazione avrà sempre la stessa firma/andamento. Inoltre sfruttiamo i lrosso in quanto si trova vicino alla banda dell'infrarosso e possiamo anche determianre lo stato di salute della painta in base all'accresccimento del rosso o infrarosso (se aumenta da rosso a nir la pianta è sana).  
+###Il valore DVI varia da +255 a -255 perchè la risoluzione radiometricaè di 8bit, quindi 255 possibilità. 
+
+dvi2022=d2022[[1]] - d2022[[2]]     #Differenza tra le bande del vicino infrarosso nir [[1]] e del rosso red [[2]]. 
+dvi1984=d1984[[1]] - d1984[[2]]     
+cl<-colorRampPalette(c("darkblue", "yellow", "red", "black"))(100)     #Crea una rampa di colori che va dal blu scuro, al giallo, al rosso e al nero con 100 gradazioni.
+
+par(mfrow=c(1,2))        #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 2 colonne.
+plot(dvi2022,col=cl)    #Le immagini vengono visualizzate tramite la funzione "plot()" e rappresentano l'indice di differenza di vegetazione per l'immagine di Dublino nel 1984 e Dublino nel 2022.
+plot(dvi1984,col=cl)  
+
+#Calcolo NDVI: indice di differenza normalizzata delle vegetazioni utilizzando i valori delle bande rosse e infrarosse delle immagini. viene calcolata con la formula NDVI=(nir-red/nir+red)
+## Il valore NDVI va da +1 a -1  perchè se il nir è massimo e red minimo, insrendo nella formula otteniamo: 255-0/255+0=1 (valore massimo). Otteniamo -1 quando il nir è minimo. 
+
+ndvi2022<-dvi2022/(d2022[[1]]+d2022[[2]])    #dvi2022 è il numeratore nir-red. d2022[[1]]+d2022[[2]] rappresenta il denominatore, ovvero nir+red; dove le bande sono nir=1 e red=2.
+ndvi1984<-dvi1984/(d1984[[1]]+d1984[[2]])    #dvi1984 è il numeratore nir-red. d1984[[1]]+d1984[[2]] rappresenta il denominatore, ovvero nir+red; dove le bande sono nir=1 e red=2.
+
+par(mfrow=c(1,2))           #Funzione usata per creare una finestra grafica in una griglia di righe e colonne specificando il numero di righe e colonne che in questo caso sono 1 riga e 2 colonne.
+plot(ndvi1984, col=cl)      #Le immagini vengono visualizzate tramite la funzione "plot()" e rappresentano l'indice NDVI per l'immagine di Dublino nel 1984 e Dublino nel 2022, con la relativa palette di colori.  
+plot(ndvi2022, col=cl)
+
+#ANALISI MULTIVARIATA 
+##Vengono eseguite analisi multivariate come l'applicazione di una trasformata principale delle componenti (PCA) alle immagini, il calcolo della deviazione standard tramite la funzione focal(), e il calcolo della varianza delle componenti principali ottenute dalla PCA.
+###Scelgo io la banda: in questo caso viene specificata manualmente la banda da utilizzare (r=1,g=2,b=3)
+
+im.plotRGB(d2022,r=1,g=2,b=3)    #Comando che permette la visualizzazione di tutti i colori combinando le bande rosso, verde e blu. ???????????????????????In questo caso il rosso è nella banda 1, il verde nella banda 2 e il blu nella banda 3. La funzione fa parte del pacchetto imageRy.
+im.plotRGB(d2022,r=1,g=2,b=3) 
+nir84<-d1984[[1]]                #Associamo la banda 1, il nir????? all'oggetto nir84 per comodità. vogliamo usare l'infrarosso perchè la vegetazione assorbe il rosso.
+nir22<-d2022[[1]]
+
+cl<-colorRampPalette(c("red","orange","yellow"))(100)    #Creata una palette di colori che va dal rosso, all'arancione e al giallo con 100 sfumature per visualizzare poi le immagini nir. 
+plot(nir84, col=cl)
+plot(nir22, col=cl)
+
+am84<-focal(nir84,matrix(1/9,3,3),fun=sd)      #Calcolo della deviazione standard attraverso la funzione "focal()" che consente di creare una finestra di calcolo la cui dimensione/composizoine è definita da "matrix()"; nell ospecifico 1/9 indica che la finestra è grande 9 quadretti disposi 3x3. "fun()" inidica la funzione e "sd" indica la deviazione standard. 
+am22<-focal(nir22,matrix(1/9,3,3),fun=sd)
+plot(am84)                                     #Visualizzazione delle deviazioni standard delle due immagini. 
+plot(am22)
+
+#Non sclego la banda:  viene eseguita la PCA sull'intera immagine senza specificare una banda. E' una analisi delle copmonenti principali dell'immagine che ci permette di portare un sistema a più bande in una sola. 
+im.plotRGB(d1984,r=1,g=2,b=3)
+im.plotRGB(d2022,r=1,g=2,b=3)
+pcimage84<-im.pca(d1984)    #La funzione im.pca() ci da i 3 valori delle componenti principali, ovvero: 79.65412, 17.96076, 12.62986
+pcimage22<-im.pca(d2022)    #I valori delle 3 componenti principali sono: 87.91545, 24.08029, 13.03455
+
+tot84<-sum(79.65412, 17.96076, 12.62986)      #Calcolo della varianza spiegata dalle 3 componenti principali per entrambi gli anni.
+var84x<-79.65412*100/tot84
+var84y<-17.96076*100/tot84
+var84z<-12.62986*100/tot84
+
+var84x      #Variabilità spiegata dal primo asse
+var84y      #Variabilità spiegata dal secondo asse
+var84z      #Variabilità spiegata dal terzo asse
+
+tot22<-sum(87.91545, 24.08029, 13.03455)
+var22x<-87.91545*100/tot22
+var22y<-24.08029*100/tot22
+var22z<-13.03455*100/tot22
+
+var22x
+var22y
+var22z
+
+clll<-colorRampPalette(c("red","orange","yellow"))(255) 
+plot(pcimage84, col=clll)
+plot(pcimage22, col=clll)
