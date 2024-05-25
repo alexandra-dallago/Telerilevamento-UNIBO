@@ -11,17 +11,17 @@ setwd("C:/Users/alexa/Desktop/Immagini esame")
 
 #IMPORTAZIONE DELLE IMMAGINI
 ##Le immagini sono state prese dal sito "Copernicus Browser" sulla zona di Sappada e Forni Avoltri (UD), Friuli Venezia Giulia per 3 anni diversi (2015-2018-2023) nei mesi di ottobre, per confrontare i danni causati dalla tempesta Vaia del 2018 e la copertura nevosa.
-####Per cisacun anno sono state scaricate due immagini dal satellite "sentinel 2", rispettivamente immagini "true color" aventi le bande b4, b3 e b2 (red, green, blue); e una seconda immagine "false color" aventi le bande b8, b4 e b3 (nir, red, green). Lo scopo è quello di prelevare la banda b8, ovvero quela del nir, per importarla in un unico oggetto assieme alle altre bande b4, b3 e b2
+####Per ciascun anno sono state scaricate due immagini dal satellite "sentinel 2", rispettivamente immagini "true color" aventi le bande b4, b3 e b2 (red, green, blue); e una seconda immagine "false color" aventi le bande b8, b4 e b3 (nir, red, green). Lo scopo è quello di prelevare la banda b8, ovvero quella del nir, per importarla in un unico oggetto assieme alle altre bande b4, b3 e b2.
 ####Importiamo le immagini dalla cartella indicata nella directory tramite la funzione "rast()" del pacchetto "terra".
 
-TC2015<-rast("tc2015vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2015" per l'anno 2015. Le bande presenti in quessto oggetto sono b4, b3 e b2.  
-NIR2015<-rast("fc2015vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2015" per l'anno 2015. Le bande presenti in quessto oggetto sono b8, b4 e b3.  
+TC2015<-rast("tc2015vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2015" per l'anno 2015. Le bande presenti in questo oggetto sono b4, b3 e b2.  
+NIR2015<-rast("fc2015vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2015" per l'anno 2015. Le bande presenti in questo oggetto sono b8, b4 e b3.  
 
-TC2018<-rast("tc2018vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2018" per l'anno 2018. Le bande presenti in quessto oggetto sono b4, b3 e b2.  
-NIR2018<-rast("fc2018vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2018" per l'anno 2015. Le bande presenti in quessto oggetto sono b8, b4 e b3.
+TC2018<-rast("tc2018vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2018" per l'anno 2018. Le bande presenti in questo oggetto sono b4, b3 e b2.  
+NIR2018<-rast("fc2018vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2018" per l'anno 2015. Le bande presenti in questo oggetto sono b8, b4 e b3.
 
-TC2023<-rast("tc2023vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2023" per l'anno 2023. Le bande presenti in quessto oggetto sono b4, b3 e b2.
-NIR2023<-rast("fc2023vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2023" per l'anno 2023. Le bande presenti in quessto oggetto sono b8, b4 e b3.
+TC2023<-rast("tc2023vaia.jpg")      #Importazione dell'immagine jpg nell'oggetto chiamato "TC2023" per l'anno 2023. Le bande presenti in questo oggetto sono b4, b3 e b2.
+NIR2023<-rast("fc2023vaia.jpg")     #Importazione dell'immagine jpg nell'oggetto chiamato "NIR2023" per l'anno 2023. Le bande presenti in questo oggetto sono b8, b4 e b3.
 
 #Warning unknown extend: per la mancata georeferenziazione delle immagini 
 
@@ -35,7 +35,7 @@ b15g<-TC2015[[2]]      #Tramite le parentesi quadre si specifica l'oggetto da es
 b15b<-TC2015[[3]]      #Tramite le parentesi quadre si specifica l'oggetto da estrarre (in questo caso l'oggetto 3, ovvero la banda del blu, di "TC2015") per assegnarlo ad un nuovo oggetto chiamato "b15b".
 b15nir<-NIR2015[[1]]   #Tramite le parentesi quadre si specifica l'oggetto da estrarre (in questo caso l'oggetto 1, ovvero la banda del nir, di "NIR2015") per assegnarlo ad un nuovo oggetto chiamato "b15nir".
 
-b18r<-TC2018[[1]]    #Viene fatto lo stesso procendimento sopra descritto per tutti gli anni.
+b18r<-TC2018[[1]]    #Viene fatto lo stesso procedimento sopra descritto per tutti gli anni.
 b18g<-TC2018[[2]]
 b18b<-TC2018[[3]]
 b18nir<-NIR2018[[1]]
@@ -51,7 +51,7 @@ vaia23<-c(b23r,b23g,b23b,b23nir)
 
 #Attraverso la funzione "im.plotRGB()" del pacchetto "imageRy", applichiamo il nir (b8) alle componenti rosso, verde e blu dell'immagine per vedere come queste cambiano
 
-##Nir sul red: questo comporta una visualizzazione che evidenzia le caratteristiche della vegetazione in quanto la vegetazione rifletto molto di più nel nir rispetto alle altre superifici, facilitandone l'identificazione. E' possibile anche capirne lo stato di salute in quanto più queste sono in salute, più il nir verrà riflesso e più l'immagine sarà luminosa. di cosneguenza, la vegetazione assumerà il colore rosso. 
+##Nir sul red: questo comporta una visualizzazione che evidenzia le caratteristiche della vegetazione in quanto la vegetazione rifletto molto di più nel nir rispetto alle altre superfici, facilitandone l'identificazione. E' possibile anche capirne lo stato di salute in quanto più queste sono in salute, più il nir verrà riflesso e più l'immagine sarà luminosa. di conseguenza, la vegetazione assumerà il colore rosso. 
 par(mfrow=c(1,3))
 im.plotRGB(vaia15, 4,2,3)      #4,2,3 specificano rispettivamente nir, green, blu dell'oggetto "vaia15"
 im.plotRGB(vaia18, 4,2,3)  
@@ -76,9 +76,9 @@ pairs(vaia18)
 pairs(vaia23)
 
 #CLASSIFICAZIONE DELLE IMMAGINI E CALCOLO DELLA FREQUENZA
-##Viene fatta la classificazione delle immagini attraverso la funzione "im.classify()" e successivo calcolo della relativa frequenza, proporzione e percentuale del numero dei pixel. La funzione fa aprte del pacchetto "imageRy".
+##Viene fatta la classificazione delle immagini attraverso la funzione "im.classify()" e successivo calcolo della relativa frequenza, proporzione e percentuale del numero dei pixel. La funzione fa parte del pacchetto "imageRy".
 
-vaia15c<-im.classify(vaia15,3)     #Classifica le immagini tramite k-means (un agoritmo di clustering che divide un insieme di dati in un numero predeterminato di gruppi basati sulla loro somiglianza) specificando il numero di cluster che in questo caso sono 3.
+vaia15c<-im.classify(vaia15,3)     #Classifica le immagini tramite k-means (un algoritmo di clustering che divide un insieme di dati in un numero predeterminato di gruppi basati sulla loro somiglianza) specificando il numero di cluster che in questo caso sono 3.
 vaia18c<-im.classify(vaia18,3) 
 vaia23c<-im.classify(vaia23,3) 
 
@@ -86,7 +86,7 @@ f2015<-freq(vaia15c)              #Per calcolare il numero di pixel presenti tra
 f2018<-freq(vaia18c)
 f2023<-freq(vaia23c)
 
-tot2015<-ncell(vaia15c)      #Calcolo del numero totale di celle nell'immagine attrverso la funzione "ncell()". 
+tot2015<-ncell(vaia15c)      #Calcolo del numero totale di celle nell'immagine attraverso la funzione "ncell()". 
 tot2018<-ncell(vaia18c)
 tot2023<-ncell(vaia23c)
 
@@ -98,7 +98,7 @@ perc2015= prop2015*100      #Calcolo della percentuale dei cluster rispetto al t
 perc2018= prop2018*100      #Usiamo = perchè è una funzione matematica.             
 perc2023= prop2023*100   
 
-perc2015      #Riscrivo il nome dell'oggeto aventi le percentuali per visualizzar il dato. 
+perc2015      #Riscrivo il nome dell'oggetto aventi le percentuali per visualizzar il dato. 
 perc2018
 perc2023
 
@@ -111,7 +111,7 @@ y2018<-c(31.83124,34.10886, 34.05817)
 y2023<-c(18.23045,50.31034,31.45921)
 
 tabout<-data.frame(class,2015,y2018,y2023)       #Dataframe dove vengono inserite le classi di terreno e le relative percentuali per entrambe le immagini.
-anno2015 <-ggplot(tabout,aes(x=class, y=y2015, fill=class))+ geom_bar(stat="identity", color="black") + ylim(c(0, 55)) + scale_fill_manual(values = c("forest" = "#77dd77", "snow" = "#59b7d8", "soil" = "#ffb347"))       #Creazione di un grafico a barre utilizzando ggplot (dal paccketto "ggplot2") per rappresentare la distribuzione delle percentuali nelle 3 classi (water, forest,cities). "geom_bar()" specifica che il tipo di grafico, ovvero quello a barre."color=class" indica che il bordo delle barre sono colorate di nero. "stat="identity" indica che i valori forniti nei dati verranno usati per determinare l'altezza delle barre, ma "ylim(c(0,45))" indica che la scala sull'asse y è impostata da 0 a 45. "fill="class specifica che il colore di riempimento delle barre viene determinato dalla variabile "class", e che quindi ogni variabile avrà un colore di ripempimento definito da "scale_fill_manual". I codici dei colori sono stati presi dal sito "tacolor.com" 
+anno2015 <-ggplot(tabout,aes(x=class, y=y2015, fill=class))+ geom_bar(stat="identity", color="black") + ylim(c(0, 55)) + scale_fill_manual(values = c("forest" = "#77dd77", "snow" = "#59b7d8", "soil" = "#ffb347"))       #Creazione di un grafico a barre utilizzando ggplot (dal paccketto "ggplot2") per rappresentare la distribuzione delle percentuali nelle 3 classi (water, forest,cities). "geom_bar()" specifica che il tipo di grafico, ovvero quello a barre."color=class" indica che il bordo delle barre sono colorate di nero. "stat="identity" indica che i valori forniti nei dati verranno usati per determinare l'altezza delle barre, ma "ylim(c(0,45))" indica che la scala sull'asse y è impostata da 0 a 45. "fill="class specifica che il colore di riempimento delle barre viene determinato dalla variabile "class", e che quindi ogni variabile avrà un colore di riempimento definito da "scale_fill_manual". I codici dei colori sono stati presi dal sito "tacolor.com" 
 anno2018 <-ggplot(tabout,aes(x=class, y=y2018, fill=class))+ geom_bar(stat="identity", color="black") + ylim(c(0, 55)) + scale_fill_manual(values = c("forest" = "#77dd77", "snow" = "#59b7d8", "soil" = "#ffb347")) 
 anno2023 <-ggplot(tabout,aes(x=class, y=y2023, fill=class))+ geom_bar(stat="identity", color="black") + ylim(c(0, 55)) + scale_fill_manual(values = c("forest" = "#77dd77", "snow" = "#59b7d8", "soil" = "#ffb347"))      
 anno2015+anno2018+anno2023                           #Unisce i due grafici a barre creati precedentemente in una sola finestra.
@@ -147,7 +147,7 @@ plot(dvi2018,col=cl)
 plot(dvi2023,col=cl)  
 
 #Calcolo NDVI: indice di differenza normalizzata delle vegetazioni utilizzando i valori delle bande rosse e infrarosse delle immagini. Viene calcolata con la formula NDVI=(nir-red/nir+red)
-## Il valore NDVI va da +1 a -1  perchè se il nir è massimo e red minimo, insrendo nella formula otteniamo: 255-0/255+0=1 (valore massimo). Otteniamo -1 quando il nir è minimo. 
+##Il valore NDVI va da +1 a -1  perchè se il nir è massimo e red minimo, insrendo nella formula otteniamo: 255-0/255+0=1 (valore massimo). Otteniamo -1 quando il nir è minimo. 
 ###Interpretazione dei dati NDVI: valori alti, vicini a +1= vegetazione densa e sana; valori vicini 0= vegetazione scarsa, neve/ghiaccio o suolo nudo; valori bassi vicini a -1= superifci non vegetate o urbanizzate come costrzioni o strade. 
 
 ndvi2015<-dvi2015/(vaia15[[4]]+vaia15[[1]])    #dvi2022 è il numeratore nir-red. d2022[[1]]+d2022[[2]] rappresenta il denominatore, ovvero nir+red; dove le bande sono nir=1 e red=2.
