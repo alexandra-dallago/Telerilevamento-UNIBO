@@ -201,7 +201,7 @@ var23z
 var23k
 
 inferno <- colorRampPalette(viridis::inferno(100))(100)      #Creata una palette di colori chiamata "inferno" generando 100 colori diversi dalla palette prefatta "inferno" dal pacchetto "viridis". La funzione colorRampPalette è una funzione che premette la formazione di un gradiente di colore che in questo caso è di ovvero 100 
-par(mfrow=c(1,3))    
+    
 plot(pcimage15, col=inferno)
 plot(pcimage18, col=inferno)
 plot(pcimage23, col=inferno)
