@@ -161,39 +161,39 @@ plot(ndvi2023, col=cl)
 
 #ANALISI MULTIVARIATA 
 ##Vengono eseguite analisi multivariate come l'applicazione di una trasformata principale delle componenti (PCA) alle immagini, il calcolo della deviazione standard tramite la funzione focal(), e il calcolo della varianza delle componenti principali ottenute dalla PCA.
-###Non sclego la banda:  viene eseguita la PCA sull'intera immagine senza specificare una banda. E' una analisi delle copmonenti principali dell'immagine che ci permette di portare un sistema a più bande in una sola. 
+###Non sclego la banda:  viene eseguita la PCA sull'intera immagine senza specificare una banda. E' una analisi delle componenti principali dell'immagine che ci permette di portare un sistema a più bande in una sola. 
 
-pcimage15<-im.pca(vaia15)    #La funzione im.pca() ci da i 3 valori delle componenti principali, ovvero:  136.453262  32.793144   7.449183   2.016412
-pcimage18<-im.pca(vaia18)    #I valori delle 3 componenti principali sono: 87.91545, 24.08029, 13.03455
-pcimage23<-im.pca(vaia23) 
+pcimage15<-im.pca(vaia15)    #La funzione im.pca() ci da i valori delle componenti principali, ovvero: 126.115767, 34.245806, 7.722683, 2.409742
+pcimage18<-im.pca(vaia18)    #I valori delle componenti principali sono: 116.258096, 22.025689, 3.525593, 1.486523
+pcimage23<-im.pca(vaia23)    #I valori delle componenti principali sono: 129.868960, 36.889861, 9.751995, 2.256578
 
-tot15<-sum(136.453262, 32.793144, 7.449183, 2.016412)      #Somamtoria delle componenti principali  
-var15x<-136.453262*100/tot15      #Calcolo della varianza spiegata dalle 3 componenti principali per entrambi gli anni.
-var15y<-32.793144*100/tot15
-var15z<-7.449183*100/tot15
-var15k<-2.016412*100/tot15
+tot15<-sum(126.115767, 34.245806, 7.722683, 2.409742)      #Sommatoria delle componenti principali  
+var15x<-126.115767*100/tot15      #Calcolo della varianza spiegata dalle 3 componenti principali per entrambi gli anni.
+var15y<-34.245806*100/tot15
+var15z<-7.722683*100/tot15
+var15k<-2.409742*100/tot15
 
 var15x      #Variabilità spiegata dal primo asse
 var15y      #Variabilità spiegata dal secondo asse
 var15z      #Variabilità spiegata dal terzo asse
 var15k      #Variabilità spiegata dal quarto asse
 
-tot18<-sum(110.148775, 22.794595, 4.353711, 1.424322)
-var18x<-110.148775*100/tot18
-var18y<-22.794595*100/tot18
-var18z<-4.353711*100/tot18
-var18k<-1.424322*100/tot18
+tot18<-sum(116.258096, 22.025689, 3.525593, 1.486523)
+var18x<-116.258096*100/tot18
+var18y<-22.025689*100/tot18
+var18z<-3.525593*100/tot18
+var18k<-1.486523*100/tot18
 
 var18x
 var18y
 var18z
 var18k
 
-tot23<-sum(132.819884, 37.324598, 10.333292, 2.552092)
-var23x<-132.819884*100/tot18
-var23y<-37.324598*100/tot18
-var23z<-10.333292*100/tot18
-var23k<-2.552092*100/tot18
+tot23<-sum(129.868960, 36.889861, 9.751995, 2.256578)
+var23x<-129.868960*100/tot18
+var23y<-36.889861*100/tot18
+var23z<-9.751995*100/tot18
+var23k<-2.256578*100/tot18
 
 var23x
 var23y
@@ -202,8 +202,8 @@ var23k
 
 inferno <- colorRampPalette(viridis::inferno(100))(100)      #Creata una palette di colori chiamata "inferno" generando 100 colori diversi dalla palette prefatta "inferno" dal pacchetto "viridis". La funzione colorRampPalette è una funzione che premette la formazione di un gradiente di colore che in questo caso è di ovvero 100 
     
-plot(pcimage15, col=inferno)
-plot(pcimage18, col=inferno)
+plot(pcimage15, col=inferno)            #Notiamo come PC3 indichi una bassa relazione
+plot(pcimage18, col=inferno)            
 plot(pcimage23, col=inferno)
  
 ###Scelgo io la banda: in questo caso viene specificata manualmente la banda da utilizzare, ovvero il nir. 
